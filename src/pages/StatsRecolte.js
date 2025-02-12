@@ -170,22 +170,46 @@ const NotificationsPopup = () => (
   useEffect(() => {
     fetchStatsData();
   }, []);
+// ####################################################
 
-  const fetchStatsData = async () => {
-    try {
-      setLoading(true);
-      const response = await apiFruit.get("/secteurs/papaye/stat/", {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      const extractedData = response.data?.[0]?.results?.[0] || [];
-      setStatsData(extractedData);
-      setLoading(false);
-    } catch (error) {
-      console.error("❌ Erreur lors du chargement des statistiques :", error);
-      setError("Erreur lors du chargement des données. Veuillez réessayer plus tard.");
-      setLoading(false);
-    }
-  };
+const fetchStatsData = async () => {
+  try {
+    setLoading(true);
+    const response = await apiFruit.get("/secteurs/papaye/stat/", {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+
+    console.log("✅ Réponse API sur Vercel :", response.data);
+
+    const extractedData = response.data?.[0]?.results?.[0] || [];
+    setStatsData(extractedData);
+    setLoading(false);
+  } catch (error) {
+    console.error("❌ Erreur lors du chargement des statistiques :", error);
+    setError("Erreur lors du chargement des données. Veuillez réessayer plus tard.");
+    setLoading(false);
+  }
+};
+
+
+// ###################################################
+
+
+  // const fetchStatsData = async () => {
+  //   try {
+  //     setLoading(true);
+  //     const response = await apiFruit.get("/secteurs/papaye/stat/", {
+  //       headers: { Authorization: `Bearer ${token}` },
+  //     });
+  //     const extractedData = response.data?.[0]?.results?.[0] || [];
+  //     setStatsData(extractedData);
+  //     setLoading(false);
+  //   } catch (error) {
+  //     console.error("❌ Erreur lors du chargement des statistiques :", error);
+  //     setError("Erreur lors du chargement des données. Veuillez réessayer plus tard.");
+  //     setLoading(false);
+  //   }
+  // };
 
   const COLORS = ['#0088FE', '#00C49F', '#FFBB28'];
   const latestStats = statsData.length > 0 ? statsData[statsData.length - 1] : null;
