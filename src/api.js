@@ -14,10 +14,10 @@
 import axios from "axios";
 
 // Base URL pour l'authentification (comptes)
-const API_ACCOUNT_URL = "http://127.0.0.1:8000/api/account";
+const API_ACCOUNT_URL = "https://detection-maturation.onrender.com/api/account";
 
 // Base URL pour la gestion des fruits (upload d'images, secteurs, etc.)
-const API_FRUIT_URL = "http://127.0.0.1:8000/api/Fruit";
+const API_FRUIT_URL = "https://detection-maturation.onrender.com/api/Fruit";
 
 // Création des instances Axios
 export const apiAccount = axios.create({
