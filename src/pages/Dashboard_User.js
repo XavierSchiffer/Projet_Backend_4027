@@ -2,6 +2,7 @@ import { Box, IconButton, useTheme } from "@mui/material";
 import { ColorModeContext, tokens } from "../../src/theme";
 import LightModeOutlinedIcon from "@mui/icons-material/LightModeOutlined";
 import DarkModeOutlinedIcon from "@mui/icons-material/DarkModeOutlined";
+import { useLocation } from 'react-router-dom';
 
 import { Link, useNavigate } from "react-router-dom";
 import { Upload, Bell, User, Settings, Moon, LogOut, X, Home, Sun } from "lucide-react";
@@ -11,6 +12,8 @@ import { apiFruit } from "../api";
 import "./Dashboard_User.css";
 import ProfilePic from "../components/assets/pdp.jpg";
 import { PieChart, Pie, Tooltip, Legend, Cell, ResponsiveContainer } from "recharts";
+import React from "react";
+import SettingsPopup from "./SettingsPopup";
 
 
 const DashboardU = () => {
@@ -22,7 +25,8 @@ const DashboardU = () => {
   const [showNotifications, setShowNotifications] = useState(false);
   const [notifications, setNotifications] = useState([]);
   const [unreadCount, setUnreadCount] = useState(0);
-
+  const location = useLocation();  // Ajoutez cette ligne
+  
   const [latestPapayaData, setLatestPapayaData] = useState({
     pourcentage_papaye_non_mur: 0,
     pourcentage_papaye_semi_mur: 0,
@@ -42,6 +46,8 @@ const DashboardU = () => {
   const notificationRef = useRef(null);
   const { user, logout } = useContext(AuthContext);
   const navigate = useNavigate();
+  // Dans votre composant principal
+  const [showSettings, setShowSettings] = useState(false);
 
 
   const fetchPapayaInfo = async () => {
@@ -212,7 +218,10 @@ const DashboardU = () => {
       </div>
     </div>
   );
-
+  const handleUserClick = async () => {
+    navigate('/profil')
+  };
+  
   const handleHomeClick = () => {
     navigate('/dashboardU');
   };
@@ -222,35 +231,51 @@ const DashboardU = () => {
   return (
     <div className="flex h-screen">
       <div className="topbar">
+      {/* <div className="topbar"> */}
         <div className="topbar-left">
           <h1 className="topbar-title">KHYZER SYSTÈME</h1>
         </div>
-        <div className="topbar-right">
-          <Home size={28} className="topbar-icon" onClick={handleHomeClick} />
-          <Moon size={28} className="topbar-icon" />
-          {/* <IconButton onClick={colorMode.toggleColorMode}>
-          {theme.palette.mode === "dark" ? (
-            <DarkModeOutlinedIcon />
-          ) : (
-            <LightModeOutlinedIcon />
-          )}
-        </IconButton> */}
-          <Settings size={24} className="topbar-icon" />
-          <div className="notifications-container">
-            <Bell 
-              size={24} 
-              className="topbar-icon" 
-              onClick={handleNotificationClick}
-            />
-            {unreadCount > 0 && (
-              <span className="notification-badge">
-                {unreadCount}
-              </span>
-            )}
-            {showNotifications && <NotificationsPopup />}
-          </div>
-          <User size={24} className="topbar-icon" />
-        </div>
+
+      <div className="topbar-right">
+      <Moon size={28} className="topbar-icon" />
+      <div className="notifications-container">
+        <Bell 
+          size={24} 
+          className="topbar-icon" 
+          onClick={handleNotificationClick}
+        />
+        {unreadCount > 0 && (
+          <span className="notification-badge">
+            {unreadCount}
+          </span>
+        )}
+        {showNotifications && <NotificationsPopup />}
+      </div>
+      <button 
+        className={`user-button ${location.pathname === '/profile' ? 'active' : ''}`}
+        onClick={handleUserClick}
+      >
+        <User size={24} className="topbar-icon" />
+      </button>
+      <div style={{ position: 'relative' }}>
+    <button 
+      className={`icon-button ${showSettings ? 'active' : ''}`}
+      onClick={() => setShowSettings(!showSettings)}
+    >
+      <Settings size={24} className="topbar-icon" />
+    </button>
+    {showSettings && (
+      <>
+        <div className="settings-overlay" onClick={() => setShowSettings(false)} />
+        <SettingsPopup 
+          isOpen={showSettings} 
+          onClose={() => setShowSettings(false)} 
+        />
+      </>
+    )}
+  </div>
+      {/* <Settings size={24} className="topbar-icon" /> */}
+    </div>
       </div>
 
     {/* Sidebar */}
@@ -258,10 +283,13 @@ const DashboardU = () => {
         {/* Partie 1 - Profile */}
       <div className="sidebar-profile">
         <div className="profile-image">
-        <img src={ProfilePic} alt="Profile" />
+          <img src={ProfilePic} alt="Profile" />
         </div>
         <div className="profile-name">
           {user.username ? user.username : "Utilisateur"}
+        </div>
+        <div className="home-button">
+          <Home size={28} className="sidebar-icon" onClick={handleHomeClick} />
         </div>
       </div>
 
@@ -289,12 +317,11 @@ const DashboardU = () => {
       {/* Partie 3 - Logout */}
       <div className="sidebar-footer">
         <button className="logout-button" onClick={() => { logout(); navigate("/loginUser"); }}>
-        <LogOut size={20} />
+          <LogOut size={20} />
           <span>Déconnexion</span>
         </button>
       </div>
-      </div>
-
+    </div>
       {/* Main Content */}
       <div className="main-content">
         <h1>Sélectionnez une image</h1>

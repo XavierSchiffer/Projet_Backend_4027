@@ -170,46 +170,22 @@ const NotificationsPopup = () => (
   useEffect(() => {
     fetchStatsData();
   }, []);
-// ####################################################
 
-const fetchStatsData = async () => {
-  try {
-    setLoading(true);
-    const response = await apiFruit.get("/secteurs/papaye/stat/", {
-      headers: { Authorization: `Bearer ${token}` },
-    });
-
-    console.log("✅ Réponse API sur Vercel :", response.data);
-
-    const extractedData = response.data?.[0]?.results?.[0] || [];
-    setStatsData(extractedData);
-    setLoading(false);
-  } catch (error) {
-    console.error("❌ Erreur lors du chargement des statistiques :", error);
-    setError("Erreur lors du chargement des données. Veuillez réessayer plus tard.");
-    setLoading(false);
-  }
-};
-
-
-// ###################################################
-
-
-  // const fetchStatsData = async () => {
-  //   try {
-  //     setLoading(true);
-  //     const response = await apiFruit.get("/secteurs/papaye/stat/", {
-  //       headers: { Authorization: `Bearer ${token}` },
-  //     });
-  //     const extractedData = response.data?.[0]?.results?.[0] || [];
-  //     setStatsData(extractedData);
-  //     setLoading(false);
-  //   } catch (error) {
-  //     console.error("❌ Erreur lors du chargement des statistiques :", error);
-  //     setError("Erreur lors du chargement des données. Veuillez réessayer plus tard.");
-  //     setLoading(false);
-  //   }
-  // };
+  const fetchStatsData = async () => {
+    try {
+      setLoading(true);
+      const response = await apiFruit.get("/secteurs/papaye/stat/", {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      const extractedData = response.data?.[0]?.results?.[0] || [];
+      setStatsData(extractedData);
+      setLoading(false);
+    } catch (error) {
+      console.error("❌ Erreur lors du chargement des statistiques :", error);
+      setError("Erreur lors du chargement des données. Veuillez réessayer plus tard.");
+      setLoading(false);
+    }
+  };
 
   const COLORS = ['#0088FE', '#00C49F', '#FFBB28'];
   const latestStats = statsData.length > 0 ? statsData[statsData.length - 1] : null;
@@ -222,7 +198,6 @@ const fetchStatsData = async () => {
           <h1 className="topbar-title">KHYZER SYSTÈME</h1>
         </div>
         <div className="topbar-right">
-          <Home size={28} className="topbar-icon" onClick={handleHomeClick} />
           <Moon size={28} className="topbar-icon" />
           <Settings size={24} className="topbar-icon" />
           <div className="notifications-container">
@@ -242,15 +217,18 @@ const fetchStatsData = async () => {
         </div>
       </div>
 
-      {/* Sidebar */}
+    {/* Sidebar */}
     <div className="sidebar">
         {/* Partie 1 - Profile */}
       <div className="sidebar-profile">
         <div className="profile-image">
-        <img src={ProfilePic} alt="Profile" />
+          <img src={ProfilePic} alt="Profile" />
         </div>
         <div className="profile-name">
-          {user.username ? user.username : "Utilisateur"} !
+          {user.username ? user.username : "Utilisateur"}
+        </div>
+        <div className="home-button">
+          <Home size={28} className="sidebar-icon" onClick={handleHomeClick} />
         </div>
       </div>
 
@@ -278,11 +256,11 @@ const fetchStatsData = async () => {
       {/* Partie 3 - Logout */}
       <div className="sidebar-footer">
         <button className="logout-button" onClick={() => { logout(); navigate("/loginUser"); }}>
-        <LogOut size={20} />
+          <LogOut size={20} />
           <span>Déconnexion</span>
         </button>
       </div>
-      </div>
+    </div>
 
       {/* Main Content */}
       <div className="main-content">

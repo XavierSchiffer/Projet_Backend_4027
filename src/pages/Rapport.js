@@ -13,6 +13,7 @@ import AuthContext from "../context/AuthContext";
 import { apiFruit } from "../api";
 import "./Rapport.css";
 import ProfilePic from "../components/assets/pdp.jpg";
+import "./Dashboard_User.css";
 
 
 
@@ -200,12 +201,11 @@ const RapportPage = () => {
 
   return (
     <div className="flex h-screen">
-      <div className="topbar">
+            <div className="topbar">
         <div className="topbar-left">
           <h1 className="topbar-title">KHYZER SYSTÈME</h1>
         </div>
         <div className="topbar-right">
-          <Home size={28} className="topbar-icon" onClick={handleHomeClick} />
           <Moon size={28} className="topbar-icon" />
           <Settings size={24} className="topbar-icon" />
           <div className="notifications-container">
@@ -225,16 +225,18 @@ const RapportPage = () => {
         </div>
       </div>
 
-{/* ############################################# */}
     {/* Sidebar */}
     <div className="sidebar">
         {/* Partie 1 - Profile */}
       <div className="sidebar-profile">
         <div className="profile-image">
-        <img src={ProfilePic} alt="Profile" />
+          <img src={ProfilePic} alt="Profile" />
         </div>
         <div className="profile-name">
-          {user.username ? user.username : "Utilisateur"} !
+          {user.username ? user.username : "Utilisateur"}
+        </div>
+        <div className="home-button">
+          <Home size={28} className="sidebar-icon" onClick={handleHomeClick} />
         </div>
       </div>
 
@@ -262,11 +264,12 @@ const RapportPage = () => {
       {/* Partie 3 - Logout */}
       <div className="sidebar-footer">
         <button className="logout-button" onClick={() => { logout(); navigate("/loginUser"); }}>
-        <LogOut size={20} />
+          <LogOut size={20} />
           <span>Déconnexion</span>
         </button>
       </div>
-      </div>
+    </div>
+
     <div className="main-content">
       <h1 className="page-title">Faire un rapport</h1>
       <form onSubmit={handleSubmit} className="rapport-form">

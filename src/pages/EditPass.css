@@ -1,0 +1,207 @@
+.edit-password-container {
+    display: flex;
+    flex: 1;
+    min-height: calc(100vh - 64px);
+    background: linear-gradient(135deg, #f5f7fa 0%, #e4e8ec 100%);
+    padding: 2rem;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .password-card {
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 20px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 450px;
+    padding: 2.5rem;
+    transform: translateY(0);
+    transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+  }
+  
+  .password-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+  }
+  
+  .card-header {
+    margin-bottom: 2.5rem;
+  }
+  
+  .card-header h2 {
+    text-align: center;
+    color: #2d3748;
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin: 0;
+    padding-bottom: 1rem;
+    position: relative;
+  }
+  
+  .card-header h2::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60px;
+    height: 4px;
+    background: linear-gradient(90deg, #3b82f6 0%, #60a5fa 100%);
+    border-radius: 2px;
+  }
+  
+  .input-group {
+    margin-bottom: 1.5rem;
+  }
+  
+  .password-input {
+    position: relative;
+    width: 100%;
+  }
+  
+  .password-input input {
+    width: 100%;
+    padding: 1rem 1.2rem;
+    padding-right: 3rem;
+    border: 2px solid #e2e8f0;
+    border-radius: 12px;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    background-color: #f8fafc;
+  }
+  
+  .password-input input:focus {
+    outline: none;
+    border-color: #3b82f6;
+    background-color: #fff;
+    box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
+  }
+  
+  .password-input input:disabled {
+    background-color: #f1f5f9;
+    cursor: not-allowed;
+    opacity: 0.7;
+  }
+  
+  .toggle-password {
+    position: absolute;
+    right: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    padding: 0.5rem;
+    cursor: pointer;
+    color: #64748b;
+    transition: color 0.2s ease;
+  }
+  
+  .toggle-password:hover {
+    color: #3b82f6;
+  }
+  
+  .error-message, .success-message {
+    padding: 0.8rem 1rem;
+    border-radius: 10px;
+    font-size: 0.95rem;
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    animation: slideIn 0.3s ease-out;
+  }
+  
+  .error-message {
+    background-color: #fee2e2;
+    color: #dc2626;
+    border-left: 4px solid #dc2626;
+  }
+  
+  .success-message {
+    background-color: #dcfce7;
+    color: #16a34a;
+    border-left: 4px solid #16a34a;
+  }
+  
+  .submit-button {
+    width: 100%;
+    padding: 1rem 1.5rem;
+    background: linear-gradient(90deg, #3b82f6 0%, #60a5fa 100%);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .submit-button::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+      90deg,
+      rgba(255, 255, 255, 0) 0%,
+      rgba(255, 255, 255, 0.2) 50%,
+      rgba(255, 255, 255, 0) 100%
+    );
+    transition: left 0.5s ease-in-out;
+  }
+  
+  .submit-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+  }
+  
+  .submit-button:hover::before {
+    left: 100%;
+  }
+  
+  .submit-button:disabled {
+    background: linear-gradient(90deg, #93c5fd 0%, #bfdbfe 100%);
+    transform: none;
+    box-shadow: none;
+    cursor: not-allowed;
+  }
+  
+  @keyframes slideIn {
+    from {
+      opacity: 0;
+      transform: translateY(-10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  /* Responsive adjustments */
+  @media (max-width: 640px) {
+    .edit-password-container {
+      padding: 1rem;
+    }
+  
+    .password-card {
+      padding: 1.5rem;
+      border-radius: 15px;
+    }
+  
+    .card-header h2 {
+      font-size: 1.5rem;
+    }
+  
+    .password-input input {
+      padding: 0.8rem 1rem;
+      font-size: 0.95rem;
+    }
+  
+    .submit-button {
+      padding: 0.8rem 1.2rem;
+      font-size: 1rem;
+    }
+  }
