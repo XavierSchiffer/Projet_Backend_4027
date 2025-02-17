@@ -22,6 +22,7 @@ import SectorList from "./pages/List_Secteur";
 // import EditProfile from "./pages/EditProfil";
 import UserProfile from "./pages/UserProfil";
 import EditPassword from "./pages/EditePass";
+import EditProfile from "./pages/EditProfil";
 
 
 function App() {
@@ -50,11 +51,12 @@ function App() {
                         <Route path="/sector-list" element={<SectorList />} />
                         <Route path="/profil" element={<UserProfile />} />
                         <Route path="/edit-password" element={<EditPassword />} />
+                        <Route path="/edit-profile" element={<EditProfile />} />
                         
                     </Route>
 
                     {/* Redirection par défaut */}
-                    <Route path="*" element={<Navigate to="/login" />} />
+                    <Route path="*" element={<Navigate to="/loginUser" />} />
                 </Routes>
             </Router>
         </AuthProvider>
