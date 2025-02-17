@@ -196,72 +196,73 @@ const NotificationsPopup = () => (
 
   return (
     <div className="flex h-screen">
-    <div className="topbar">
-      <div className="topbar-left">
-        <h1 className="topbar-title">KHYZER SYSTÈME</h1>
-      </div>
-      <div className="topbar-right">
-        <Home size={28} className="topbar-icon" onClick={handleHomeClick} />
-        <Moon size={28} className="topbar-icon" />
-        <Settings size={24} className="topbar-icon" />
-        <div className="notifications-container">
-          <Bell 
-            size={24} 
-            className="topbar-icon" 
-            onClick={handleNotificationClick}
-          />
-          {unreadCount > 0 && (
-            <span className="notification-badge">
-              {unreadCount}
-            </span>
-          )}
-          {showNotifications && <NotificationsPopup />}
+      <div className="topbar">
+        <div className="topbar-left">
+          <h1 className="topbar-title">KHYZER SYSTÈME</h1>
         </div>
-        <User size={24} className="topbar-icon" />
+        <div className="topbar-right">
+          <Moon size={28} className="topbar-icon" />
+          <Settings size={24} className="topbar-icon" />
+          <div className="notifications-container">
+            <Bell 
+              size={24} 
+              className="topbar-icon" 
+              onClick={handleNotificationClick}
+            />
+            {unreadCount > 0 && (
+              <span className="notification-badge">
+                {unreadCount}
+              </span>
+            )}
+            {showNotifications && <NotificationsPopup />}
+          </div>
+          <User size={24} className="topbar-icon" />
+        </div>
       </div>
-    </div>
 
-{/* ############################################# */}
-  {/* Sidebar */}
-  <div className="sidebar">
-      {/* Partie 1 - Profile */}
-    <div className="sidebar-profile">
-      <div className="profile-image">
-      <img src={ProfilePic} alt="Profile" />
+    {/* Sidebar */}
+    <div className="sidebar">
+        {/* Partie 1 - Profile */}
+      <div className="sidebar-profile">
+        <div className="profile-image">
+          <img src={ProfilePic} alt="Profile" />
+        </div>
+        <div className="profile-name">
+          {user.username ? user.username : "Utilisateur"}
+        </div>
+        <div className="home-button">
+          <Home size={28} className="sidebar-icon" onClick={handleHomeClick} />
+        </div>
       </div>
-      <div className="profile-name">
-        {user.username ? user.username : "Utilisateur"} !
+
+      {/* Partie 2 - Navigation */}
+      <nav className="sidebar-nav">
+        <ul>
+          <li>
+            <Link to="/rapport">
+              <span>📄 Faire un rapport</span>
+            </Link>
+          </li>
+          <li>
+            <Link to="/statistiques">
+              <span>📊 Consulter les statistiques</span>
+            </Link>
+          </li>
+          <li>
+            <Link to="/rapport-list">
+              <span>📑 Consulter un rapport</span>
+            </Link>
+          </li>
+        </ul>
+      </nav>
+
+      {/* Partie 3 - Logout */}
+      <div className="sidebar-footer">
+        <button className="logout-button" onClick={() => { logout(); navigate("/loginUser"); }}>
+          <LogOut size={20} />
+          <span>Déconnexion</span>
+        </button>
       </div>
-    </div>
-
-    {/* Partie 2 - Navigation */}
-    <nav className="sidebar-nav">
-      <ul>
-        <li>
-          <Link to="/rapport">
-            <span>📄 Faire un rapport</span>
-          </Link>
-        </li>
-        <li>
-          <Link to="/statistiques">
-            <span>📊 Consulter les statistiques</span>
-          </Link>
-        </li>
-        <li>
-          <Link to="/rapport-list">
-            <span>📑 Consulter un rapport</span>
-          </Link>
-        </li>
-      </ul>
-    </nav>
-
-    {/* Partie 3 - Logout */}
-    <div className="sidebar-footer">
-      <button className="logout-button" onClick={() => { logout(); navigate("/loginUser"); }}>
-      <LogOut size={20} />
-        <span>Déconnexion</span>
-      </button>
-    </div>
     </div>
 
     <div className="main-content">

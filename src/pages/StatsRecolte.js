@@ -198,7 +198,6 @@ const NotificationsPopup = () => (
           <h1 className="topbar-title">KHYZER SYSTÈME</h1>
         </div>
         <div className="topbar-right">
-          <Home size={28} className="topbar-icon" onClick={handleHomeClick} />
           <Moon size={28} className="topbar-icon" />
           <Settings size={24} className="topbar-icon" />
           <div className="notifications-container">
@@ -218,15 +217,18 @@ const NotificationsPopup = () => (
         </div>
       </div>
 
-      {/* Sidebar */}
+    {/* Sidebar */}
     <div className="sidebar">
         {/* Partie 1 - Profile */}
       <div className="sidebar-profile">
         <div className="profile-image">
-        <img src={ProfilePic} alt="Profile" />
+          <img src={ProfilePic} alt="Profile" />
         </div>
         <div className="profile-name">
-          {user.username ? user.username : "Utilisateur"} !
+          {user.username ? user.username : "Utilisateur"}
+        </div>
+        <div className="home-button">
+          <Home size={28} className="sidebar-icon" onClick={handleHomeClick} />
         </div>
       </div>
 
@@ -254,11 +256,11 @@ const NotificationsPopup = () => (
       {/* Partie 3 - Logout */}
       <div className="sidebar-footer">
         <button className="logout-button" onClick={() => { logout(); navigate("/loginUser"); }}>
-        <LogOut size={20} />
+          <LogOut size={20} />
           <span>Déconnexion</span>
         </button>
       </div>
-      </div>
+    </div>
 
       {/* Main Content */}
       <div className="main-content">

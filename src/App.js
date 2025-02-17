@@ -17,6 +17,9 @@ import UsersList from "./pages/listUsers";
 import AddUserForm from "./pages/addUser";
 import AssignSector from "./pages/secteurCreate";
 import SectorList from "./pages/List_Secteur";
+import UserProfile from "./pages/UserProfil";
+import EditPassword from "./pages/EditePass";
+import EditProfile from "./pages/EditProfil";
 
 
 function App() {
@@ -43,11 +46,14 @@ function App() {
                         <Route path="/add-user" element={<AddUserForm />} />
                         <Route path="/assigner-secteur" element={<AssignSector />} />
                         <Route path="/sector-list" element={<SectorList />} />
+                        <Route path="/profil" element={<UserProfile />} />
+                        <Route path="/edit-password" element={<EditPassword />} />
+                        <Route path="/edit-profile" element={<EditProfile />} />
                         
                     </Route>
 
                     {/* Redirection par défaut */}
-                    <Route path="*" element={<Navigate to="/login" />} />
+                    <Route path="*" element={<Navigate to="/loginUser" />} />
                 </Routes>
             </Router>
         </AuthProvider>
