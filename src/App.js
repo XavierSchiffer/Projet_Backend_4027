@@ -21,6 +21,7 @@ import SectorList from "./pages/List_Secteur";
 // import EditPassword from "./pages/EditePass";
 // import EditProfile from "./pages/EditProfil";
 import UserProfile from "./pages/UserProfil";
+import EditPassword from "./pages/EditePass";
 
 
 function App() {
@@ -48,6 +49,7 @@ function App() {
                         <Route path="/assigner-secteur" element={<AssignSector />} />
                         <Route path="/sector-list" element={<SectorList />} />
                         <Route path="/profil" element={<UserProfile />} />
+                        <Route path="/edit-password" element={<EditPassword />} />
                         
                     </Route>
 
