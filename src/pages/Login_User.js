@@ -14,13 +14,25 @@ const LoginUser = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const success = await login(username, password);
-        if (success) {
-            navigate("/dashboardU");
+        const user = await login(username, password); // 🔹 Récupère l'utilisateur connecté
+    
+        console.log("🔍 Utilisateur connecté :", user); // Ajout pour vérifier les données
+    
+        if (user) {
+            console.log("👀 Rôle de l'utilisateur :", user.role); // Vérifie le rôle récupéré
+            
+            if (user.role === "ADMIN") {
+                console.log("➡️ Redirection vers /dashboardA");
+                navigate("/dashboard"); // 🔹 Rediriger les admins
+            } else {
+                console.log("➡️ Redirection vers /dashboardU");
+                navigate("/dashboardU"); // 🔹 Rediriger les autres utilisateurs
+            }
         } else {
             alert("Échec de la connexion, vérifiez vos identifiants.");
         }
     };
+    
 
     return (
     <div className="login-container">
@@ -57,7 +69,11 @@ const LoginUser = () => {
                 <a href="#" className="hover:underline">Forgot password?</a>
                 </div>
 
-                        {/* Bouton Login */}
+                {/* Bouton Login
+                <button type="button" onClick={handleSubmit}>
+                        Se connecter
+                </button> */}
+
                 <button 
                 className="w-full bg-white text-purple-900 font-bold py-3 rounded-lg hover:bg-purple-700 hover:text-white transition"
                 type="submit"

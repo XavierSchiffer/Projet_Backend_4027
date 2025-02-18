@@ -1,7 +1,7 @@
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "./context/AuthContext";
-import Login from "./pages/Login";
+// import Login from "./pages/Login";
 import LoginUser from "./pages/Login_User";
 import Dashboard from "./pages/Dashboard";
 import DashboardUser from "./pages/Dashboard_User";
@@ -23,6 +23,8 @@ import SectorList from "./pages/List_Secteur";
 import UserProfile from "./pages/UserProfil";
 import EditPassword from "./pages/EditePass";
 import EditProfile from "./pages/EditProfil";
+import EditProfileA from "./pages/EditProfilA";
+import EditPasswordA from "./pages/EditePassA";
 
 
 function App() {
@@ -34,12 +36,13 @@ function App() {
         <AuthProvider>
             <Router>
                 <Routes>
-                    <Route path="/login" element={<Login />} />
+                    {/* <Route path="/login" element={<Login />} /> */}
                     <Route path="/loginUser" element={<LoginUser />} />
-                    <Route path="/register" element={<Register />} />
+                    {/* <Route path="/register" element={<Register />} /> */}
                     
                     {/* Routes protégées */}
                     <Route element={<PrivateRoute />}>
+                        <Route path="/register" element={<Register />} />
                         <Route path="/dashboard" element={<Dashboard />} />
                         <Route path="/dashboardU" element={<DashboardUser />} />
                         <Route path="/rapport" element={<RapportPage />} />
@@ -52,6 +55,8 @@ function App() {
                         <Route path="/profil" element={<UserProfile />} />
                         <Route path="/edit-password" element={<EditPassword />} />
                         <Route path="/edit-profile" element={<EditProfile />} />
+                        <Route path="/edit-profileA" element={<EditProfileA />} />
+                        <Route path="/edit-passwordA" element={<EditPasswordA />} />
                         
                     </Route>
 
