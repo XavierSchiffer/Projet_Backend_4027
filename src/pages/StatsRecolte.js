@@ -8,6 +8,9 @@ import AuthContext from "../context/AuthContext";
 import { apiFruit } from "../api";
 import ProfilePic from "../components/assets/pdp.jpg";
 import "./Dashboard_User.css";
+import { useLocation } from 'react-router-dom';
+import SettingsPopup from "./SettingsPopup";
+
 
 const DashboardA = () => {
   const { token, user, logout } = useContext(AuthContext);
@@ -27,6 +30,12 @@ const [preview, setPreview] = useState(null);
 const [success, setSuccess] = useState(false);
 // États pour les résultats de l'analyse
 const [analysisResults, setAnalysisResults] = useState(null);
+const handleUserClick = async () => {
+  navigate('/profil')
+};
+const location = useLocation();  // Ajoutez cette ligne
+const [showSettings, setShowSettings] = useState(false);
+
 
 const notificationRef = useRef(null);
 
@@ -194,73 +203,97 @@ const NotificationsPopup = () => (
     <div className="flex h-screen">
       {/* Topbar */}
       <div className="topbar">
-        <div className="topbar-left">
-          <h1 className="topbar-title">KHYZER SYSTÈME</h1>
-        </div>
-        <div className="topbar-right">
-          <Moon size={28} className="topbar-icon" />
-          <Settings size={24} className="topbar-icon" />
-          <div className="notifications-container">
-            <Bell 
-              size={24} 
-              className="topbar-icon" 
-              onClick={handleNotificationClick}
-            />
-            {unreadCount > 0 && (
-              <span className="notification-badge">
-                {unreadCount}
-              </span>
-            )}
-            {showNotifications && <NotificationsPopup />}
-          </div>
-          <User size={24} className="topbar-icon" />
-        </div>
-      </div>
+        {/* <div className="topbar"> */}
+<div className="topbar-left">
+  <h1 className="topbar-title">KHYZER SYSTÈME</h1>
+</div>
 
-    {/* Sidebar */}
-    <div className="sidebar">
-        {/* Partie 1 - Profile */}
-      <div className="sidebar-profile">
-        <div className="profile-image">
-          <img src={ProfilePic} alt="Profile" />
-        </div>
-        <div className="profile-name">
-          {user.username ? user.username : "Utilisateur"}
-        </div>
-        <div className="home-button">
-          <Home size={28} className="sidebar-icon" onClick={handleHomeClick} />
-        </div>
-      </div>
+<div className="topbar-right">
+<Moon size={28} className="topbar-icon" />
+<div className="notifications-container">
+<Bell 
+  size={24} 
+  className="topbar-icon" 
+  onClick={handleNotificationClick}
+/>
+{unreadCount > 0 && (
+  <span className="notification-badge">
+    {unreadCount}
+  </span>
+)}
+{showNotifications && <NotificationsPopup />}
+</div>
+<button 
+className={`user-button ${location.pathname === '/profile' ? 'active' : ''}`}
+onClick={handleUserClick}
+>
+<User size={24} className="topbar-icon" />
+</button>
+<div style={{ position: 'relative' }}>
+<button 
+className={`icon-button ${showSettings ? 'active' : ''}`}
+onClick={() => setShowSettings(!showSettings)}
+>
+<Settings size={24} className="topbar-icon" />
+</button>
+{showSettings && (
+<>
+<div className="settings-overlay" onClick={() => setShowSettings(false)} />
+<SettingsPopup 
+  isOpen={showSettings} 
+  onClose={() => setShowSettings(false)} 
+/>
+</>
+)}
+</div>
+{/* <Settings size={24} className="topbar-icon" /> */}
+</div>
+</div>
 
-      {/* Partie 2 - Navigation */}
-      <nav className="sidebar-nav">
-        <ul>
-          <li>
-            <Link to="/rapport">
-              <span>📄 Faire un rapport</span>
-            </Link>
-          </li>
-          <li>
-            <Link to="/statistiques">
-              <span>📊 Consulter les statistiques</span>
-            </Link>
-          </li>
-          <li>
-            <Link to="/rapport-list">
-              <span>📑 Consulter un rapport</span>
-            </Link>
-          </li>
-        </ul>
-      </nav>
+{/* Sidebar */}
+<div className="sidebar">
+{/* Partie 1 - Profile */}
+<div className="sidebar-profile">
+<div className="profile-image">
+  <img src={ProfilePic} alt="Profile" />
+</div>
+<div className="profile-name">
+  {user.username ? user.username : "Utilisateur"}
+</div>
+<div className="home-button">
+  <Home size={28} className="sidebar-icon" onClick={handleHomeClick} />
+</div>
+</div>
 
-      {/* Partie 3 - Logout */}
-      <div className="sidebar-footer">
-        <button className="logout-button" onClick={() => { logout(); navigate("/loginUser"); }}>
-          <LogOut size={20} />
-          <span>Déconnexion</span>
-        </button>
-      </div>
-    </div>
+{/* Partie 2 - Navigation */}
+<nav className="sidebar-nav">
+<ul>
+  <li>
+    <Link to="/rapport">
+      <span>📄 Faire un rapport</span>
+    </Link>
+  </li>
+  <li>
+    <Link to="/statistiques">
+      <span>📊 Consulter les statistiques</span>
+    </Link>
+  </li>
+  <li>
+    <Link to="/rapport-list">
+      <span>📑 Consulter un rapport</span>
+    </Link>
+  </li>
+</ul>
+</nav>
+
+{/* Partie 3 - Logout */}
+<div className="sidebar-footer">
+<button className="logout-button" onClick={() => { logout(); navigate("/loginUser"); }}>
+  <LogOut size={20} />
+  <span>Déconnexion</span>
+</button>
+</div>
+</div>
 
       {/* Main Content */}
       <div className="main-content">
