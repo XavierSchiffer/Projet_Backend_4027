@@ -1,21 +1,15 @@
-// import { useState, useContext } from "react";
-// import { useNavigate } from "react-router-dom";
-// import AuthContext from "../context/AuthContext";
-// import { apiFruit } from "../api";
-// import "./Dashboard_User.css";
-// import ProfilePic from "../components/assets/pdp.jpg";
-// import { Link, useNavigate } from "react-router-dom";
+import { useLocation } from 'react-router-dom';
 
 import { Link, useNavigate } from "react-router-dom";
-import { Upload, Bell, User, Settings, Moon, LogOut, X, Home } from "lucide-react";
+import { Upload, Bell, User, Settings, Moon, LogOut, X, Home, Loader } from "lucide-react";
 import { useState, useContext, useRef, useEffect } from "react";
 import AuthContext from "../context/AuthContext";
 import { apiFruit } from "../api";
 import "./Rapport.css";
 import ProfilePic from "../components/assets/pdp.jpg";
 import "./Dashboard_User.css";
-
-
+import SettingsPopup from "./SettingsPopup";
+import React from 'react';
 
 const RapportPage = () => {
   const { token } = useContext(AuthContext);
@@ -25,10 +19,14 @@ const RapportPage = () => {
   const [commentaire, setCommentaire] = useState("");
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
+  const [error, setError] = useState('');
 //   const { token } = useContext(AuthContext);
   const [showNotifications, setShowNotifications] = useState(false);
   const [notifications, setNotifications] = useState([]);
   const [unreadCount, setUnreadCount] = useState(0);
+  const location = useLocation();
+  const [showSettings, setShowSettings] = useState(false);
+
   
   // États pour la gestion des images
   const [selectedImage, setSelectedImage] = useState(null);
@@ -53,15 +51,30 @@ const RapportPage = () => {
       }, {
         headers: { Authorization: `Bearer ${token}` },
       });
-      if (response.status === 201) {
-        setSuccess(true);
-        setTimeout(() => navigate("/"), 2000);
+  //     if (response.status === 201) {
+  //       setSuccess(true);
+  //       setTimeout(() => navigate("/"), 2000);
+  //     }
+  //   } catch (error) {
+  //     console.error("❌ Erreur lors de l'envoi du rapport :", error);
+  //   }
+  //   setLoading(false);
+  // };
+        const responseData = response.data[0];
+
+        if (responseData.state === "SUCCES") {
+          setSuccess(responseData.message);
+          setTimeout(() => navigate("/dashboardU"), 2000);
+        } else {
+          setError(responseData.message);
+        }
+      } catch (error) {
+        setError("Une erreur est survenue lors de l'envoi du rapport");
+        console.error("❌ Erreur lors de l'envoi du rapport :", error);
       }
-    } catch (error) {
-      console.error("❌ Erreur lors de l'envoi du rapport :", error);
-    }
-    setLoading(false);
-  };
+      setLoading(false);
+      };
+
 
   const fetchNotifications = async () => {
     try {
@@ -199,30 +212,61 @@ const RapportPage = () => {
     navigate('/dashboardU');
   };
 
+  const handleUserClick = async () => {
+    navigate('/profil')
+  };
+
+
+  
+
   return (
     <div className="flex h-screen">
             <div className="topbar">
-        <div className="topbar-left">
+              {/* <div className="topbar"> */}
+              <div className="topbar-left">
           <h1 className="topbar-title">KHYZER SYSTÈME</h1>
         </div>
-        <div className="topbar-right">
-          <Moon size={28} className="topbar-icon" />
-          <Settings size={24} className="topbar-icon" />
-          <div className="notifications-container">
-            <Bell 
-              size={24} 
-              className="topbar-icon" 
-              onClick={handleNotificationClick}
-            />
-            {unreadCount > 0 && (
-              <span className="notification-badge">
-                {unreadCount}
-              </span>
-            )}
-            {showNotifications && <NotificationsPopup />}
-          </div>
-          <User size={24} className="topbar-icon" />
-        </div>
+
+      <div className="topbar-right">
+      <Moon size={28} className="topbar-icon" />
+      <div className="notifications-container">
+        <Bell 
+          size={24} 
+          className="topbar-icon" 
+          onClick={handleNotificationClick}
+        />
+        {unreadCount > 0 && (
+          <span className="notification-badge">
+            {unreadCount}
+          </span>
+        )}
+        {showNotifications && <NotificationsPopup />}
+      </div>
+      <button 
+        className={`user-button ${location.pathname === '/profile' ? 'active' : ''}`}
+        onClick={handleUserClick}
+      >
+        <User size={24} className="topbar-icon" />
+      </button>
+      <div style={{ position: 'relative' }}>
+    <button 
+      className={`icon-button ${showSettings ? 'active' : ''}`}
+      onClick={() => setShowSettings(!showSettings)}
+    >
+      <Settings size={24} className="topbar-icon" />
+    </button>
+    {showSettings && (
+      <>
+        <div className="settings-overlay" onClick={() => setShowSettings(false)} />
+        <SettingsPopup 
+          isOpen={showSettings} 
+          onClose={() => setShowSettings(false)} 
+        />
+      </>
+    )}
+  </div>
+      {/* <Settings size={24} className="topbar-icon" /> */}
+    </div>
       </div>
 
     {/* Sidebar */}
@@ -296,11 +340,26 @@ const RapportPage = () => {
           required 
         />
 
-        <button type="submit" disabled={loading} className="submit-button">
+        {/* <button type="submit" disabled={loading} className="submit-button">
           {loading ? "Envoi en cours..." : "Soumettre le rapport"}
+        </button> */}
+        {error && <div className="error-message">{error}</div>}
+        {success && <div className="success-message">{success}</div>}
+
+        <button 
+          type="submit" 
+          className="submit-button"
+            disabled={loading}
+        >
+            {loading ? (
+            <>
+              <Loader size={20} className="animate-spin" />
+                  Envoi en cours...
+                    </>
+                    ) : 'Somettre le rapport'}
         </button>
       </form>
-      {success && <p className="success-message">Rapport soumis avec succès !</p>}
+      {/* {success && <p className="success-message">Rapport soumis avec succès !</p>} */}
     </div>
     </div>
   );

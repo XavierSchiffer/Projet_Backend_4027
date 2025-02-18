@@ -1,19 +1,19 @@
 import { Box, IconButton, useTheme } from "@mui/material";
 import { ColorModeContext, tokens } from "../../src/theme";
-import LightModeOutlinedIcon from "@mui/icons-material/LightModeOutlined";
-import DarkModeOutlinedIcon from "@mui/icons-material/DarkModeOutlined";
+// import LightModeOutlinedIcon from "@mui/icons-material/LightModeOutlined";
+// import DarkModeOutlinedIcon from "@mui/icons-material/DarkModeOutlined";
 import { useLocation } from 'react-router-dom';
 
 import { Link, useNavigate } from "react-router-dom";
-import { Upload, Bell, User, Settings, Moon, LogOut, X, Home, Sun } from "lucide-react";
+import { Upload, Bell, User, Settings, Moon, LogOut, X, Home, Loader } from "lucide-react";
 import { useState, useContext, useRef, useEffect } from "react";
 import AuthContext from "../context/AuthContext";
 import { apiFruit } from "../api";
 import "./Dashboard_User.css";
 import ProfilePic from "../components/assets/pdp.jpg";
 import { PieChart, Pie, Tooltip, Legend, Cell, ResponsiveContainer } from "recharts";
-import React from "react";
 import SettingsPopup from "./SettingsPopup";
+import React from "react";
 
 
 const DashboardU = () => {
@@ -39,7 +39,7 @@ const DashboardU = () => {
   const [selectedImage, setSelectedImage] = useState(null);
   const [preview, setPreview] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [success, setSuccess] = useState(false);
+  const [success, setSuccess] = useState('');
   // États pour les résultats de l'analyse
   const [analysisResults, setAnalysisResults] = useState(null);
 
@@ -48,6 +48,8 @@ const DashboardU = () => {
   const navigate = useNavigate();
   // Dans votre composant principal
   const [showSettings, setShowSettings] = useState(false);
+  const [error, setError] = useState('');
+  // const [success, setSuccess] = useState('');
 
 
   const fetchPapayaInfo = async () => {
@@ -60,10 +62,10 @@ const DashboardU = () => {
 
         if (response.data.length > 0 && response.data[0].state === "SUCCES") {
             const papayaList = response.data[0].results;
-
+            // setSuccess(response.data[0].message);
             if (papayaList.length > 0 && papayaList[0].length > 0) {
                 const latestPapaya = papayaList[0][0]; // Extraire la première papaye de la liste
-
+                
                 setLatestPapayaData({
                     pourcentage_papaye_non_mur: parseFloat(latestPapaya.pourcentage_papaye_non_mur),
                     pourcentage_papaye_semi_mur: parseFloat(latestPapaya.pourcentage_papaye_semi_mur),
@@ -135,33 +137,37 @@ const DashboardU = () => {
     const formData = new FormData();
     formData.append("image", selectedImage);
 
-  try {
-    const response = await apiFruit.post("/secteurs/papaye/upload/", formData, {
-      headers: {
-        "Content-Type": "multipart/form-data",
-        Authorization: `Bearer ${token}`,
-      },
-    });
-
-    console.log("✅ Réponse complète du backend :", response.data);
-
-    if (response.data[0].state === "SUCCES") {
-      await new Promise((resolve) => setTimeout(resolve, 2000));
-      setLoading(false);
-      setSuccess(true);
-      setAnalysisResults(response.data[0].results[0]);
-
-      setTimeout(() => {
-        setSuccess(false);
-        setSelectedImage(null);
-        setPreview(null);
-      }, 3000);
+    try {
+      const response = await apiFruit.post("/secteurs/papaye/upload/", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+  
+      console.log("✅ Réponse complète du backend :", response.data);
+  
+      const responseData = response.data[0];
+  
+      if (responseData.state === "SUCCES") {
+        setSuccess(responseData.message); // Récupère et affiche le message du backend
+        setAnalysisResults(responseData.results[0]);
+  
+        setTimeout(() => {
+          setSuccess(false);
+          setSelectedImage(null);
+          setPreview(null);
+        }, 3000);
+      } else {
+        setError(responseData.message);
+      }
+    } catch (error) {
+      setError("Une erreur est survenue lors de l'envoi de l'image");
+      console.error("❌ Erreur lors de l'envoi :", error);
     }
-  } catch (error) {
-    console.error("❌ Erreur lors de l'envoi :", error);
+  
     setLoading(false);
-  }
-};
+  };
 
   const handleNotificationClick = () => {
     setShowNotifications(!showNotifications);
@@ -339,7 +345,23 @@ const DashboardU = () => {
           {preview && (
             <div className="preview-card">
               <img src={preview} alt="Prévisualisation" />
-              <button className="upload-button" onClick={handleUpload}>Envoyer l'image</button>
+              {/* <button className="upload-button" onClick={handleUpload}>Envoyer l'image</button> */}
+              {error && <div className="error-message">{error}</div>}
+              {success && <div className="success-message">{success}</div>}
+
+              <button 
+                type="submit" 
+                className="submit-button"
+                disabled={loading}
+                onClick={handleUpload}  // ✅ Ajout de l'événement onClick
+              >
+                {loading ? (
+                  <>
+                    <Loader size={20} className="animate-spin" />
+                    Envoi en cours...
+                  </>
+                ) : 'Soumettre l\'image'}  {/* ✅ Correction du texte du bouton */}
+              </button>
             </div>
           )}
         </div>
