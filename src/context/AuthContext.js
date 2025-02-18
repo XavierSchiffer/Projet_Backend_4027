@@ -119,30 +119,32 @@ export const AuthProvider = ({ children }) => {
         try {
             const response = await apiAccount.post("/login/admin", { username, password });
             console.log("✅ Réponse complète du backend :", response.data);
-
+    
             const userData = response.data[0]?.results[0];
-            const newToken = userData.token; // ✅ Récupération correcte du token
-
+            const newToken = userData?.token; // Vérification correcte du token
+    
             if (!userData || !newToken) {
                 throw new Error("Données utilisateur ou token manquants");
             }
-
-            // ✅ Stockage correct des données utilisateur
+    
+            // Stocker les informations utilisateur et le token
             localStorage.setItem("token", newToken);
             localStorage.setItem("user", JSON.stringify(userData));
-            
+            // localStorage.setItem("user", JSON.stringify(userData));
+            console.log("🛠 Données utilisateur stockées :", localStorage.getItem("user"));
+
             setToken(newToken);
             setUser(userData);
             setIsAuthenticated(true);
-
-            console.log("🔐 Token sauvegardé :", newToken);
-            return true;
+    
+            console.log("🔐 Utilisateur connecté :", userData);
+            return userData; // 🔹 Retourner directement l'utilisateur
         } catch (error) {
             console.error("❌ Erreur de connexion", error);
-            return false;
+            return null;
         }
     };
-
+    
     const logout = () => {
         console.log("🚪 Déconnexion");
         localStorage.removeItem("token");

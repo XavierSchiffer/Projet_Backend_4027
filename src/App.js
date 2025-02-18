@@ -20,7 +20,8 @@ import SectorList from "./pages/List_Secteur";
 import UserProfile from "./pages/UserProfil";
 import EditPassword from "./pages/EditePass";
 import EditProfile from "./pages/EditProfil";
-
+import EditProfileA from "./pages/EditProfilA";
+import EditPasswordA from "./pages/EditePassA";
 
 function App() {
     const [theme, colorMode] = useMode(); // Gestion du thème
@@ -49,6 +50,8 @@ function App() {
                         <Route path="/profil" element={<UserProfile />} />
                         <Route path="/edit-password" element={<EditPassword />} />
                         <Route path="/edit-profile" element={<EditProfile />} />
+                        <Route path="/edit-profileA" element={<EditProfileA />} />
+                        <Route path="/edit-passwordA" element={<EditPasswordA />} />
                         
                     </Route>
 
