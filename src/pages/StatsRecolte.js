@@ -180,21 +180,45 @@ const NotificationsPopup = () => (
     fetchStatsData();
   }, []);
 
+  // const fetchStatsData = async () => {
+  //   try {
+  //     setLoading(true);
+  //     const response = await apiFruit.get("/secteurs/papaye/stat/", {
+  //       headers: { Authorization: `Bearer ${token}` },
+  //     });
+  //     const extractedData = response.data?.[0]?.results?.[0] || [];
+  //     setStatsData(extractedData);
+  //     setLoading(false);
+  //   } catch (error) {
+  //     console.error("❌ Erreur lors du chargement des statistiques :", error);
+  //     setError("Erreur lors du chargement des données. Veuillez réessayer plus tard.");
+  //     setLoading(false);
+  //   }
+  // };
+
   const fetchStatsData = async () => {
     try {
-      setLoading(true);
-      const response = await apiFruit.get("/secteurs/papaye/stat/", {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      const extractedData = response.data?.[0]?.results?.[0] || [];
-      setStatsData(extractedData);
-      setLoading(false);
+        setLoading(true);
+        const response = await apiFruit.get("/secteurs/papaye/stat/", {
+            headers: { Authorization: `Bearer ${token}` },
+        });
+
+        if (response.data[0].state === "ECHEC") {
+            setError(response.data[0].message); // Stocke le message d'erreur
+            setStatsData([]); // Réinitialise les données
+        } else {
+            const extractedData = response.data?.[0]?.results?.[0] || [];
+            setStatsData(extractedData);
+            setError(null);
+        }
+
+        setLoading(false);
     } catch (error) {
-      console.error("❌ Erreur lors du chargement des statistiques :", error);
-      setError("Erreur lors du chargement des données. Veuillez réessayer plus tard.");
-      setLoading(false);
+        console.error("❌ Erreur lors du chargement des statistiques :", error);
+        setError("Erreur lors du chargement des données. Veuillez réessayer plus tard.");
+        setLoading(false);
     }
-  };
+};
 
   const COLORS = ['#0088FE', '#00C49F', '#FFBB28'];
   const latestStats = statsData.length > 0 ? statsData[statsData.length - 1] : null;
@@ -295,66 +319,74 @@ onClick={() => setShowSettings(!showSettings)}
 </div>
 </div>
 
-      {/* Main Content */}
-      <div className="main-content">
-        <h1>Statistiques de Récolte des Papayes</h1>
-        {loading ? (<p>Chargement des statistiques...</p>) : error ? (<p>{error}</p>) : (
+<div className="main-content">
+    <h1>Statistiques de Récolte des Papayes</h1>
+    {loading ? (
+        <p>Chargement des statistiques...</p>
+    ) : error ? (
+        <p className="error-message">{error}</p> // Affiche le message d'erreur
+    ) : (
+        statsData.length > 0 ? (
           <div className="dashboard-grid">
-            {/* Évolution des Quantités */}
-            <div className="dashboard-card">
-              <h2>Évolution des Quantités</h2>
-              <ResponsiveContainer width="100%" height={300}>
-                <LineChart data={statsData}>
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="periode" />
-                  <YAxis />
-                  <Tooltip />
-                  <Legend />
-                  <Line type="monotone" dataKey="quantite_recolte" stroke="#0088FE" name="Quantité Récoltée" />
-                  <Line type="monotone" dataKey="quantite_non_recolter" stroke="#FF8042" name="Quantité Non Récoltée" />
-                </LineChart>
-              </ResponsiveContainer>
-            </div>
-
-            {/* Distribution par Maturité */}
-            <div className="dashboard-card">
-              <h2>Distribution par Maturité</h2>
-              {latestStats && (
-                <ResponsiveContainer width="100%" height={300}>
-                  <PieChart>
-                    <Pie data={[
-                      { name: 'Mûres', value: parseFloat(latestStats.pourcentage_papaye_mur) },
-                      { name: 'Non Mûres', value: parseFloat(latestStats.pourcentage_papaye_non_mur) },
-                      { name: 'Semi-Mûres', value: parseFloat(latestStats.pourcentage_papaye_semi_mur) }
-                    ]} cx="50%" cy="50%" innerRadius={60} outerRadius={80} fill="#8884d8" dataKey="value" label>
-                      {COLORS.map((color, index) => <Cell key={index} fill={color} />)}
-                    </Pie>
-                    <Tooltip />
-                    <Legend />
-                  </PieChart>
-                </ResponsiveContainer>
-              )}
-            </div>
-
-            {/* Évolution des Pourcentages de Maturité */}
-            <div className="dashboard-card full-width">
-              <h2>Évolution des Pourcentages de Maturité</h2>
-              <ResponsiveContainer width="100%" height={300}>
-                <BarChart data={statsData}>
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="periode" />
-                  <YAxis />
-                  <Tooltip />
-                  <Legend />
-                  <Bar dataKey="pourcentage_papaye_mur" fill="#0088FE" name="Mûres" />
-                  <Bar dataKey="pourcentage_papaye_non_mur" fill="#00C49F" name="Non Mûres" />
-                  <Bar dataKey="pourcentage_papaye_semi_mur" fill="#FFBB28" name="Semi-Mûres" />
-                </BarChart>
-              </ResponsiveContainer>
-            </div>
+          {/* Évolution des Quantités */}
+          <div className="dashboard-card">
+            <h2>Évolution des Quantités</h2>
+            <ResponsiveContainer width="100%" height={300}>
+              <LineChart data={statsData}>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="periode" />
+                <YAxis />
+                <Tooltip />
+                <Legend />
+                <Line type="monotone" dataKey="quantite_recolte" stroke="#0088FE" name="Quantité Récoltée" />
+                <Line type="monotone" dataKey="quantite_non_recolter" stroke="#FF8042" name="Quantité Non Récoltée" />
+              </LineChart>
+            </ResponsiveContainer>
           </div>
-        )}
-      </div>
+
+          {/* Distribution par Maturité */}
+          <div className="dashboard-card">
+            <h2>Distribution par Maturité</h2>
+            {latestStats && (
+              <ResponsiveContainer width="100%" height={300}>
+                <PieChart>
+                  <Pie data={[
+                    { name: 'Mûres', value: parseFloat(latestStats.pourcentage_papaye_mur) },
+                    { name: 'Non Mûres', value: parseFloat(latestStats.pourcentage_papaye_non_mur) },
+                    { name: 'Semi-Mûres', value: parseFloat(latestStats.pourcentage_papaye_semi_mur) }
+                  ]} cx="50%" cy="50%" innerRadius={60} outerRadius={80} fill="#8884d8" dataKey="value" label>
+                    {COLORS.map((color, index) => <Cell key={index} fill={color} />)}
+                  </Pie>
+                  <Tooltip />
+                  <Legend />
+                </PieChart>
+              </ResponsiveContainer>
+            )}
+          </div>
+
+          {/* Évolution des Pourcentages de Maturité */}
+          <div className="dashboard-card full-width">
+            <h2>Évolution des Pourcentages de Maturité</h2>
+            <ResponsiveContainer width="100%" height={300}>
+              <BarChart data={statsData}>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="periode" />
+                <YAxis />
+                <Tooltip />
+                <Legend />
+                <Bar dataKey="pourcentage_papaye_mur" fill="#0088FE" name="Mûres" />
+                <Bar dataKey="pourcentage_papaye_non_mur" fill="#00C49F" name="Non Mûres" />
+                <Bar dataKey="pourcentage_papaye_semi_mur" fill="#FFBB28" name="Semi-Mûres" />
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
+        </div>
+        ) : (
+            <p className="error-message">Aucune donnée de statistique trouvée pour votre secteur.</p>
+        )
+    )}
+</div>
+
     </div>
   );
 };
